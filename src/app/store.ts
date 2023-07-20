@@ -1,7 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import  googleUserReducer  from '../features/googleUserSlice';
 
 export const store = configureStore({
   reducer: {
+    googleUser: googleUserReducer,
   },
 });
 

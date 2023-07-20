@@ -5,9 +5,21 @@ import {
 }
     from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { connectGoogleUser } from '../features/signInGoogleSlice';
+import { connect } from 'react-redux';
+import { useAppSelector } from '../app/hooks';
+import { selectGoogleUser } from '../features/googleUserSlice';
 
-const Navigation = () => {
+
+
+const mapDispatchToProps = {
+    setGoogleUser: connectGoogleUser
+}
+
+
+const Navigation = ( { setGoogleUser } : any  ) => {
     const { colorMode, toggleColorMode } = useColorMode();
+    const googleUser = useAppSelector(selectGoogleUser);
 
     return (
         <>
@@ -17,6 +29,16 @@ const Navigation = () => {
                     <Flex alignItems={'center'}>
                         <Stack direction={'row'} spacing={7}>
                             <Menu>
+                                <Button onClick={setGoogleUser}
+                                    rounded={'full'}
+                                    variant={'link'}
+                                    cursor={'pointer'}
+                                    minW={0}>
+                                        Sign in 
+                                </Button>
+                                {googleUser && <Button onClick={() => console.log(googleUser)}>SignedIn</Button>}
+                                <Button onClick={() => console.log(googleUser)} />
+
                                 <MenuButton
                                     as={Button}
                                     rounded={'full'}
@@ -25,7 +47,7 @@ const Navigation = () => {
                                     minW={0}>
                                     <Avatar
                                         size={'sm'}
-                                        src={'https://avatars.dicebear.com/api/male/username.svg'}
+                                        src={googleUser ? googleUser.photoUrl : 'https://avatars.dicebear.com/api/male/username.svg'}
                                     />
                                 </MenuButton>
                                 <MenuList alignItems={'center'}>
@@ -57,4 +79,4 @@ const Navigation = () => {
         </>
     );
 }
-export default Navigation;
+export default connect(null, mapDispatchToProps)(Navigation);
