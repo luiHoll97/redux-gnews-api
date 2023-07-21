@@ -21,6 +21,8 @@ export const googleUserSlice = createSlice({
     reducers: {
         // Use the PayloadAction type to declare the contents of `action.payload`
         setGoogleUser: (state: GoogleUserState, action: PayloadAction<GoogleUser | null>) => {
+            const authToken = action.payload?.idToken ? action.payload?.idToken : '';
+            sessionStorage.setItem('oauthToken', authToken)
             return {
                 ...state,
                 googleUser: action.payload,
