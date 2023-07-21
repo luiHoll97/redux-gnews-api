@@ -1,6 +1,7 @@
 import Navigation from "./components/Navigation";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase/firebase-config";
+import AllNews from "./components/AllNews";
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   return (
     <div>
       <Navigation />
+      <AllNews />
     </div>
   );
 }
