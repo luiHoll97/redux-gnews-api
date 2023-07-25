@@ -1,41 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import { Box, Center, HStack, Select, SimpleGrid, Spinner } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Article } from '../types/article';
+import { countries } from '../utils/countriesSelect';
+import ArticleCard from './helperComps/ArticleCard';
 
-const AllNews = () : JSX.Element => {
-    const apikey = 'f46c14c8497f8ef30b03bfa43069571d';
-    const gNewsApiUrl = `https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey=${apikey}`;
+const AllNews = (): JSX.Element => {
 
-    const [news, setNews] = useState([]);
+    const [country, setCountry] = useState('us');
+    const [category, setCategory] = useState('general');
+    const [search, setSearch] = useState('');
+    const [page, setPage] = useState(10);
+    const [language, setLanguage] = useState('en');
+
+    const apikey = process.env.REACT_APP_GNEWS_API_KEY;
+    const gNewsApiUrl = `https://gnews.io/api/v4/search?q=example&lang=${language}&country=${country}&max=${page}&apikey=${apikey}`;
+
+    const [news, setNews] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
 
-    //using axios to fetch data from API
-    const fetchNews = async () : Promise<void> => {
+   
+
+    // using axios to fetch data from API
+    const fetchNews = async (): Promise<void> => {
         const response = await axios.get(gNewsApiUrl);
-        console.log(response);
         setNews(response.data.articles);
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchNews();
-    }, []);
+       fetchNews();
+    }, [language, country, page]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Box mt={20} alignItems={'center'}>
+                <Center>
+                    <Spinner
+                        thickness='5px'
+                        speed='0.65s'
+                        emptyColor='gray.200'
+                        color='blue.500'
+                        size='xl'
+                    />
+                </Center>
+            </Box>
+        );
     }
 
     return (
         <div>
-            {news.map((news: any) => (
-                <div key={news.id}>
-                    <h3>{news.title}</h3>
-                    <p>{news.description}</p>
-                    <img src={news.image ? news.image : ''} alt={news.title} />
-                    <a href={news.url} target="_blank" rel="noreferrer">
-                        Read More
-                    </a>
-                </div>
+            <Box>
+                <HStack spacing={5} mb={10} mt={10}>
+                    <Select
+                        placeholder='Select Country'
+                        onChange={(e) => setCountry(e.target.value)}
+                    >
+                        {countries.map((country) => (
+                            <option key={country.code} value={country.code}>
+                                {country.name}
+                            </option>
+                        ))}
+                    </Select>
+                    <Select
+                        placeholder={page.toString()}
+                        onChange={(e) => setPage(parseInt(e.target.value))}
+                    >
+                        <option value='10'>10</option>
+                        <option value='20'>20</option>
+                        <option value='30'>30</option>
+                    </Select>
+                    <Select
+                        placeholder='Select Language'
+                        onChange={(e) => setLanguage(e.target.value)}
+                    >
+                        <option value='en'>English</option>
+                        <option value='fr'>French</option>
+                        <option value='de'>German</option>
+                        <option value='it'>Italian</option>
+                        <option value='es'>Spanish</option>
+                    </Select>
+                </HStack>
+            <SimpleGrid columns={[1, 2, 3, 4]} spacing={10}>
+            {news.map((news: Article) => (
+                <ArticleCard article={news} />
             ))}
+            </SimpleGrid>
+            </Box>
         </div>
     );
 }
