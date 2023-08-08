@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import  googleUserReducer  from '../features/googleUserSlice';
+import  favouritesReducer  from '../features/favouriteArticlesSlice';
 
 export const store = configureStore({
   reducer: {
     googleUser: googleUserReducer,
+    favouriteArticles: favouritesReducer,
   },
 });
 

@@ -1,9 +1,11 @@
-import { Box, Center, HStack, Select, SimpleGrid, Spinner } from '@chakra-ui/react';
+import { Box, Button, Center, HStack, Select, SimpleGrid, Spinner } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Article } from '../types/article';
 import { countries } from '../utils/countriesSelect';
 import ArticleCard from './helperComps/ArticleCard';
+import { selectFavouriteArticles } from '../features/favouriteArticlesSlice';
+import { useAppSelector } from '../app/hooks';
 
 const AllNews = (): JSX.Element => {
 
@@ -18,6 +20,8 @@ const AllNews = (): JSX.Element => {
 
     const [news, setNews] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const favouriteArticles = useAppSelector(selectFavouriteArticles);
 
    
 
@@ -51,7 +55,7 @@ const AllNews = (): JSX.Element => {
     return (
         <div>
             <Box>
-                <HStack spacing={5} mb={10} mt={10}>
+                <HStack spacing={5} mb={10} mt={2}>
                     <Select
                         placeholder='Select Country'
                         onChange={(e) => setCountry(e.target.value)}

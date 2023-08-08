@@ -5,29 +5,16 @@ import { selectGoogleUser } from "../../features/googleUserSlice";
 import { HeartClick } from "./HeartClick";
 import { ImportedArticle } from "../../types/importedArticle";
 
-/*
-export interface Article {
-    title: string;
-    description: string;
-    url: string;
-    content: string;
-    image: string;
-    publishedAt: string;
-    source: {
-        name: string;
-        url: string;
-    };
-}
-*/
 
 interface Props {
-    article: Article 
+    article: ImportedArticle;
 }
 
-const ArticleCard = ({ article }: Props) => {
+const ImportedArticleCard = ({ article }: Props) => {
     const userID: string | undefined = useAppSelector(selectGoogleUser)?.localId;
     return (
         <div>
+            { article && 
             <Card maxW='sm' >
                 <CardBody maxH={'300px'}>
                     <Image
@@ -48,20 +35,20 @@ const ArticleCard = ({ article }: Props) => {
                 <Divider mt={5} />
                 <Center >
                     <CardFooter padding={0} m={1}>
-                        <Stack direction='row' spacing='6' align='center' justify='space-between' padding={0}>
+                        <Stack direction='row' spacing='1' align='center' justify='space-between' padding={0}>
                                 <a href={article.source.url} target="_blank" rel="noopener noreferrer">
                                     <Button variant='ghost' colorScheme='blue'>
                                         Go to Source
                                     </Button>
                                 </a>
-                            <HeartClick userID={userID} article={article}/>
+                                <Button variant='ghost' colorScheme='red'>Remove</Button>
                         </Stack>
                     </CardFooter>
                 </Center>
             </Card>
-
+}
         </div>
     )
 }
 
-export default ArticleCard
+export default ImportedArticleCard
